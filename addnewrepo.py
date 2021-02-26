@@ -11,6 +11,7 @@ def addnewrepo(repo):
     subprocess.run("git init -b main", shell=True)
     subprocess.run(f"git remote add origin {uri}", shell=True)
     subprocess.run("git remote -v", shell=True)
+    subprocess.run("git pull origin main", shell=True)
 
 
 if __name__ == "__main__":
