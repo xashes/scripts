@@ -2,8 +2,6 @@
 
 import subprocess
 
-uri = "git@github.com:xashes/scripts.git"
-
 
 def getrepo(repo):
     addr = "git@github.com:xashes"
