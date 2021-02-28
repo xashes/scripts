@@ -2,7 +2,7 @@
 
 import subprocess
 
-folders = ["configs", "data", "projects", "books", "plum"]
+folders = ["configs", "org", "data", "projects", "books", "plum"]
 
 user = "pi"
 host = "pizero"
