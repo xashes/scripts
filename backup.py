@@ -12,7 +12,7 @@ target = "~/backup"
 def backup():
     for f in folders:
         folder = f"~/{f}"
-        cmd = f"rsync -av {folder} {user}@{host}:{target}"
+        cmd = f"rsync -avhP --delete {folder} {user}@{host}:{target}"
         subprocess.run(cmd, shell=True)
     else:
         print(f"Backup complete for: {folders}")
