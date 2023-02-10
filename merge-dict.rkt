@@ -9,7 +9,11 @@
 (define personal-file (build-path dict-directory "personal-dict.pyim"))
 (define test-file (build-path dict-directory "test.pyim"))
 ;; 读取目标文件,把各行保存入集合
-;; 读取 dcache 文件，逐行检查，对于不在集合中的行，则追加到目标文件末尾
+;; 集合中只保存 wubi/\b
+;; 读取 dcache 文件，逐行检查，对于不在集合中的编码，则追加到目标文件末尾
+;; To fix
+;; 完成不同的行追加到末尾，导致同样编码，但更新的不同顺序的，不能覆盖旧有顺序，而是作为新的条目加在最后
+;; 实际无法起到作用
 (define (read-file fp)
   (when (not (file-exists? fp))
       (call-with-output-file fp
@@ -31,7 +35,8 @@
       (call-with-input-file src
         (lambda (in)
           (for ([line (in-lines in)]
-                #:unless (set-member? target-set line))
+                #:unless (set-member? target-set line)
+                #:when (string-prefix? line "wubi"))
             (displayln line out)
             ))))))
 (module+ main
