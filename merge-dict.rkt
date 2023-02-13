@@ -11,9 +11,21 @@
 ;; 读取目标文件,把各行保存入集合
 ;; 集合中只保存 wubi/\b
 ;; 读取 dcache 文件，逐行检查，对于不在集合中的编码，则追加到目标文件末尾
-;; To fix
-;; 完成不同的行追加到末尾，导致同样编码，但更新的不同顺序的，不能覆盖旧有顺序，而是作为新的条目加在最后
+;; FIXME
+;; 完全不同的行追加到末尾，导致同样编码，但更新的不同顺序的，不能覆盖旧有顺序，而是作为新的条目加在最后
 ;; 实际无法起到作用
+;; 可以追加完之后，把重复编码的行删掉
+;; TODO
+;; 显示编码重复的行，看下目前的效果是什么样
+(define (get-code line)
+  ;; like "wubi/yyg 文"
+  ;; return "wubi/yyg"
+  (car (string-split line " "))
+  )
+(module+ test
+  (check-equal? (get-code "wubi/yy 方")
+                "wubi/yy")
+  )
 (define (read-file fp)
   (when (not (file-exists? fp))
       (call-with-output-file fp
@@ -35,10 +47,11 @@
       (call-with-input-file src
         (lambda (in)
           (for ([line (in-lines in)]
-                #:unless (set-member? target-set line)
-                #:when (string-prefix? line "wubi"))
+                #:when (string-prefix? line "wubi")
+                #:unless (set-member? target-set line))
             (displayln line out)
             ))))))
 (module+ main
   (merge-file dcache-file personal-file)
+  ;; (take (set->list (read-file personal-file)) 5)
   )
