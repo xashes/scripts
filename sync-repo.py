@@ -2,7 +2,7 @@
 
 import subprocess
 
-folders = ["configs", "org"]
+folders = ["configs", "org", "scripts"]
 
 def gitpull():
     for d in folders:
