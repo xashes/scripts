@@ -51,7 +51,37 @@
                 #:unless (set-member? target-set line))
             (displayln line out)
             ))))))
+
+;; display duplicated code in the file
+;; 去重的规律并不好找啊，是不是因为前面没保持排序
+;; "wubi/adw 亓 其"
+;; "wubi/adw 其 亓"
+;; "wubi/c 以 能 又"
+;; "wubi/c 能 又 以"
+(define (duplicated-code dict-file)
+  (define table (make-hash))
+  (call-with-input-file dict-file
+    (lambda (in)
+      (for ([line (in-lines in)])
+        (let* ([lst (string-split line)]
+               [code (car lst)])
+          (hash-set! table code (add1 (hash-ref table code 0))
+                     )))))
+  (define duplicated-keys (for/list ([(key value) (in-hash table)]
+                                     #:when (> value 1)
+                                     )
+                            key))
+  (call-with-input-file dict-file
+    (lambda (in)
+      (sort (for/list ([line (in-lines in)]
+                       #:when (set-member? duplicated-keys (get-code line))
+                       )
+              line)
+            #:key get-code string<?
+            ))))
+
 (module+ main
   (merge-file dcache-file personal-file)
   ;; (take (set->list (read-file personal-file)) 5)
+  ;; (duplicated-code personal-file)
   )
