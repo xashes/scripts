@@ -2,6 +2,7 @@ import os
 import csv
 import pandas as pd
 from datetime import datetime
+import time
 
 
 def get_org_files(folder):
@@ -26,6 +27,13 @@ def get_last_modified_time(df, file_path):
         return datetime.fromisoformat(rows.iloc[0]["modified_time"])
     return None
 
+def get_last_record_time(df, file_path):
+    """返回上一次记录该文件的修改时间"""
+    rows = df.loc[df["file_path"] == file_path].tail(1)
+    if not rows.empty:
+        return datetime.fromisoformat(rows.iloc[0]["time"])
+    return None
+
 
 def is_same_hour(dt1, dt2):
     """判断两个时间是否在同一小时内"""
@@ -42,13 +50,14 @@ def update_records(file_path, csv_file_path):
 
     last_modified_time = get_last_modified_time(df, file_path)
     current_modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+    last_record_time = get_last_record_time(df, file_path)
 
     if last_modified_time is not None and current_modified_time <= last_modified_time:
         return
 
     char_count = get_char_count(file_path)
 
-    if last_modified_time is None or not is_same_hour(now, last_modified_time):
+    if last_record_time is None or not is_same_hour(now, last_record_time):
         df = df.append({
             "time": now.strftime("%Y-%m-%dT%H"),
             "file_path": file_path,
@@ -62,7 +71,7 @@ def update_records(file_path, csv_file_path):
     df.to_csv(csv_file_path, index=False)
 
 def main():
-    org_folder = os.path.expanduser("~/org/writing")
+    org_folder = ("/home/xashes/org/writing")
     tracker_folder = os.path.join(org_folder, "words-tracker")
 
     if not os.path.exists(tracker_folder):
