@@ -1,0 +1,14 @@
+[Unit]
+Description=Word Tracker Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/xashes/scripts
+ExecStart=/home/xashes/anaconda3/bin/python word-tracker.py
+Restart=always
+RestartSec=600
+# User=root
+
+[Install]
+WantedBy=multi-user.target
