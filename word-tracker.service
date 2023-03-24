@@ -7,7 +7,7 @@ Type=simple
 WorkingDirectory=/home/xashes/scripts
 ExecStart=/home/xashes/anaconda3/bin/python word_tracker.py
 Restart=always
-RestartSec=600
+RestartSec=300
 
 [Install]
 WantedBy=multi-user.target

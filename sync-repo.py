@@ -2,7 +2,7 @@
 
 import subprocess
 
-folders = ["configs", "org", "scripts", ".emacs.d"]
+folders = ["configs", "org", "scripts", ".emacs.d", "fork/mind-wave"]
 
 def gitpull():
     for d in folders:
