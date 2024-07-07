@@ -7,7 +7,10 @@ folders = ["configs", "org", "scripts", ".emacs.d"]
 def gitpull():
     for d in folders:
         folder = f"~/{d}"
-        cmd = f"cd {folder} && git pull"
+        if d != '.emacs.d':
+            cmd = f"cd {folder} && git pull"
+        else:
+            cmd = f"cd {folder} && git pull --rebase"
         subprocess.run(cmd, shell=True)
     else:
         print(f"git pull complete for: {folders}")
